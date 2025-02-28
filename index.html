@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Duty Management App</title>
+  <!-- Inline CSS -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradient Background */
+      color: white; /* Text Color */
+      padding: 10px;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+      backdrop-filter: blur(10px); /* Frosted glass effect */
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 1s ease-in-out; /* Fade-in Animation */
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+      font-family: 'Arial Black', sans-serif; /* Bold and stylish font */
+      font-size: 1.5rem; /* Smaller size for compact look */
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .logo span {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #ff9966; /* Accent color for the icon */
+    }
+    h3 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+      font-weight: bold;
+      animation: slideIn 1s ease-in-out; /* Slide-in Animation */
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    form label {
+      font-weight: bold;
+      color: #fff;
+    }
+    form input, form select, form button {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2); /* Semi-transparent input fields */
+      color: white;
+      transition: all 0.3s ease; /* Smooth transition for hover effects */
+    }
+    form input:focus, form select:focus {
+      background: rgba(255, 255, 255, 0.4); /* Highlight on focus */
+      outline: none;
+    }
+    form button {
+      background: linear-gradient(135deg, #ff9966, #ff5e62); /* Gradient Button */
+      color: white;
+      cursor: pointer;
+      border: none;
+      font-weight: bold;
+      animation: pulse 1.5s infinite; /* Pulsing Animation */
+    }
+    form button:hover {
+      transform: scale(1.05); /* Slightly enlarge on hover */
+    }
+    a.view-monthly-data {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+    a.view-monthly-data:hover {
+      text-decoration: underline;
+      color: #ff9966;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 5px;
+      }
+      .container {
+        padding: 10px;
+      }
+      form input, form select, form button {
+        font-size: 14px;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    @keyframes slideIn {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Logo-Style Title -->
+    <div class="logo">
+      <span>📋</span> Duty Manager
+    </div>
+
+    <!-- Payment Rate Settings -->
+    <form id="rateForm">
+      <h3>Set Your Payment Rates</h3>
+      <label for="regularRate">Regular Rate (₹/hour):</label>
+      <input type="number" id="regularRate" placeholder="Enter regular rate" required>
+      <label for="otRate">OT Rate (₹/hour):</label>
+      <input type="number" id="otRate" placeholder="Enter OT rate" required>
+      <button type="submit">Save Rates</button>
+    </form>
+
+    <!-- Form to Add Duty -->
+    <form id="dutyForm">
+      <h3>Add Duty</h3>
+      <label for="date">Date:</label>
+      <input type="date" id="date" required>
+      <label for="shift">Shift:</label>
+      <select id="shift" required>
+        <option value="Morning">Morning</option>
+        <option value="Afternoon">Afternoon</option>
+        <option value="Night">Night</option>
+        <option value="Shutty">Shutty</option> <!-- New option for Shutty -->
+      </select>
+      <label for="hours">Hours Worked:</label>
+      <input type="number" id="hours" placeholder="Enter hours" required>
+      <label for="otHours">OT Hours (Optional):</label>
+      <input type="number" id="otHours" placeholder="Enter OT hours (optional)">
+      <button type="submit">Add Duty</button>
+    </form>
+
+    <!-- Link to Monthly Data Page -->
+    <a href="monthly-data.html" class="view-monthly-data">View Monthly Data</a>
+  </div>
+
+  <!-- Inline JavaScript -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const rateForm = document.getElementById("rateForm");
+      const dutyForm = document.getElementById("dutyForm");
+      let duties = JSON.parse(localStorage.getItem("duties")) || [];
+      let rates = JSON.parse(localStorage.getItem("rates")) || { regularRate: 500, otRate: 700 };
+
+      // Display saved rates
+      document.getElementById("regularRate").value = rates.regularRate;
+      document.getElementById("otRate").value = rates.otRate;
+
+      // Save rates to local storage
+      rateForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        rates.regularRate = parseInt(document.getElementById("regularRate").value) || 500;
+        rates.otRate = parseInt(document.getElementById("otRate").value) || 700;
+        localStorage.setItem("rates", JSON.stringify(rates));
+        alert("Rates saved successfully!");
+      });
+
+      // Save duties to local storage
+      function saveDutiesToLocalStorage() {
+        localStorage.setItem("duties", JSON.stringify(duties));
+      }
+
+      // Handle duty form submission
+      dutyForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const date = document.getElementById("date").value;
+        const shift = document.getElementById("shift").value;
+        const hours = parseInt(document.getElementById("hours").value);
+        const otHours = parseInt(document.getElementById("otHours").value) || 0;
+
+        if (hours > 0 || otHours > 0 || shift === "Shutty") {
+          duties.push({ date, shift, hours, otHours });
+          saveDutiesToLocalStorage();
+          dutyForm.reset();
+          alert("Duty added successfully!");
+        } else {
+          alert("Please enter valid hours.");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
