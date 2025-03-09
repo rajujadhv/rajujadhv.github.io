@@ -3,9 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Duty Management App</title>
-  <!-- Inline CSS -->
+  <title>Duty Manager</title>
   <style>
+    /* Root Variables for Themes */
+    :root {
+      --bg-color: #000000; /* Black Background */
+      --text-color: #ffffff; /* White Text */
+      --container-bg: rgba(255, 255, 255, 0.1); /* Semi-transparent container */
+      --button-bg: linear-gradient(135deg, #ff9966, #ff5e62); /* Gradient buttons */
+      --button-text: white; /* Button text color */
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -13,29 +21,29 @@
     }
     body {
       font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradient Background */
-      color: white; /* Text Color */
+      background: var(--bg-color);
+      color: var(--text-color);
       padding: 10px;
-      overflow-x: hidden; /* Prevent horizontal scrolling */
+      overflow-x: hidden;
     }
     .container {
       max-width: 600px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
-      backdrop-filter: blur(10px); /* Frosted glass effect */
+      background: var(--container-bg);
+      backdrop-filter: blur(10px);
       padding: 20px;
       border-radius: 15px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 1s ease-in-out; /* Fade-in Animation */
+      box-shadow: 0 4px 6px rgba(255, 255, 255, 0.2);
+      animation: fadeIn 1s ease-in-out;
     }
     .logo {
       text-align: center;
       margin-bottom: 20px;
-      font-family: 'Arial Black', sans-serif; /* Bold and stylish font */
-      font-size: 1.5rem; /* Smaller size for compact look */
+      font-family: 'Arial Black', sans-serif;
+      font-size: 1.5rem;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #fff;
+      color: var(--text-color);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -44,7 +52,7 @@
     .logo span {
       font-size: 2rem;
       font-weight: bold;
-      color: #ff9966; /* Accent color for the icon */
+      color: #ff9966;
     }
     h3 {
       text-align: center;
@@ -52,7 +60,7 @@
       font-size: 1.2rem;
       letter-spacing: 1px;
       font-weight: bold;
-      animation: slideIn 1s ease-in-out; /* Slide-in Animation */
+      animation: slideIn 1s ease-in-out;
     }
     form {
       display: flex;
@@ -61,46 +69,130 @@
     }
     form label {
       font-weight: bold;
-      color: #fff;
+      color: var(--text-color);
     }
     form input, form select, form button {
       padding: 10px;
       font-size: 16px;
       border: none;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.2); /* Semi-transparent input fields */
-      color: white;
-      transition: all 0.3s ease; /* Smooth transition for hover effects */
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--text-color);
+      transition: all 0.3s ease;
     }
     form input:focus, form select:focus {
-      background: rgba(255, 255, 255, 0.4); /* Highlight on focus */
+      background: rgba(255, 255, 255, 0.4);
       outline: none;
     }
     form button {
-      background: linear-gradient(135deg, #ff9966, #ff5e62); /* Gradient Button */
-      color: white;
+      background: var(--button-bg);
+      color: var(--button-text);
       cursor: pointer;
       border: none;
       font-weight: bold;
-      animation: pulse 1.5s infinite; /* Pulsing Animation */
+      animation: pulse 1.5s infinite;
     }
     form button:hover {
-      transform: scale(1.05); /* Slightly enlarge on hover */
+      transform: scale(1.05);
     }
-    a.view-monthly-data {
-      display: block;
-      text-align: center;
-      margin-top: 20px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .tab-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .tab-button {
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--text-color);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
       transition: all 0.3s ease;
     }
-    a.view-monthly-data:hover {
-      text-decoration: underline;
-      color: #ff9966;
+    .tab-button.active {
+      background: var(--button-bg);
+      color: var(--button-text);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: var(--container-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(255, 255, 255, 0.2);
+    }
+    table th, table td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    table th {
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: bold;
+    }
+    table td {
+      color: var(--text-color);
+    }
+    .shutty-row {
+      background-color: #ff4d4d !important; /* Red background for Off Day rows */
+      color: white !important; /* White text for better visibility */
+    }
+    .summary {
+      margin-top: 20px;
+      padding: 15px;
+      background: var(--container-bg);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(255, 255, 255, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .summary div {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .delete-all-btn, .download-pdf-btn {
+      display: inline-block;
+      margin: 20px 10px;
+      padding: 10px 20px;
+      background: var(--button-bg-red);
+      color: var(--button-text);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .delete-all-btn:hover, .download-pdf-btn:hover {
+      transform: scale(1.05);
+    }
+    .show-summary-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .show-summary-btn:hover {
+      transform: scale(1.05);
+    }
+    .summary-section {
+      display: none;
     }
     @media (max-width: 600px) {
       body {
@@ -142,60 +234,114 @@
       }
     }
   </style>
-	<script type='text/javascript' src='//pl25987528.effectiveratecpm.com/0b/c6/72/0bc67244eba181e61aebbd7a321cfcb8.js'></script>
 </head>
 <body>
-	
   <div class="container">
-    <!-- Logo-Style Title -->
+    <!-- Logo -->
     <div class="logo">
       <span>📋</span> Duty Manager
     </div>
-<script type="text/javascript">
-	atOptions = {
-		'key' : 'ac382d61ec66314c6d8c6c0179aaedfc',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/ac382d61ec66314c6d8c6c0179aaedfc/invoke.js"></script>
-  
-    <!-- Payment Rate Settings -->
-    <form id="rateForm">
-      <h3>Set Your Payment Rates</h3>
-      <label for="regularRate">Regular Rate (₹/hour):</label>
-      <input type="number" id="regularRate" placeholder="Enter regular rate" required>
-      <label for="otRate">OT Rate (₹/hour):</label>
-      <input type="number" id="otRate" placeholder="Enter OT rate" required>
-      <button type="submit">Save Rates</button>
-    </form>
-    <!-- Form to Add Duty -->
-    <form id="dutyForm">
-      <h3>Add Duty</h3>
-      <label for="date">Date:</label>
-      <input type="date" id="date" required>
-      <label for="shift">Shift:</label>
-      <select id="shift" required>
-        <option value="Morning">Morning</option>
-        <option value="Afternoon">Afternoon</option>
-        <option value="Night">Night</option>
-        <option value="Shutty">Shutty</option> <!-- New option for Shutty -->
-      </select>
-      <label for="hours">Hours Worked:</label>
-      <input type="number" id="hours" placeholder="Enter hours" required>
-      <label for="otHours">OT Hours (Optional):</label>
-      <input type="number" id="otHours" placeholder="Enter OT hours (optional)">
-      <button type="submit">Add Duty</button>
-    </form>
 
-    <!-- Link to Monthly Data Page -->
-    <a href="monthly-data.html" class="view-monthly-data">View Monthly Data</a>
+    <!-- Tab Buttons -->
+    <div class="tab-buttons">
+      <button class="tab-button active" onclick="switchTab('add-duty')">Add Duty</button>
+      <button class="tab-button" onclick="switchTab('view-data')">View Monthly Data</button>
+    </div>
+
+    <!-- Add Duty Tab -->
+    <div id="add-duty" class="tab-content active">
+      <!-- Payment Rate Settings -->
+      <form id="rateForm">
+        <h3>Set Your Payment Rates</h3>
+        <label for="regularRate">Regular Rate (₹/hour):</label>
+        <input type="number" step="any" id="regularRate" placeholder="e.g., 50.23" required>
+        <label for="otRate">OT Rate (₹/hour):</label>
+        <input type="number" step="any" id="otRate" placeholder="e.g., 75.50" required>
+        <button type="submit">Save Rates</button>
+      </form>
+
+      <!-- Form to Add Duty -->
+      <form id="dutyForm">
+        <h3>Add Duty</h3>
+        <label for="date">Date:</label>
+        <input type="date" id="date" required>
+        <label for="shift">Shift:</label>
+        <select id="shift" required>
+          <option value="Fast">Fast</option>
+          <option value="Second">Second</option>
+          <option value="Night'">Night'</option>
+          <option value="Off Day">Off Day</option>
+        </select>
+        <label for="hours">Hours Worked:</label>
+        <input type="number" step="any" id="hours" placeholder="e.g., 8.5">
+        <label for="otHours">OT Hours (Optional):</label>
+        <input type="number" step="any" id="otHours" placeholder="e.g., 2.25">
+        <button type="submit">Add Duty</button>
+      </form>
+    </div>
+
+    <!-- View Monthly Data Tab -->
+    <div id="view-data" class="tab-content">
+      <h3>Monthly Data</h3>
+      <table id="monthlyDataTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Shift</th>
+            <th>Hours Worked</th>
+            <th>OT Hours</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will be dynamically inserted here -->
+        </tbody>
+      </table>
+
+      <!-- Show Summary Button -->
+      <button class="show-summary-btn" onclick="toggleSummary()">Show Summary</button>
+
+      <!-- Summary Section -->
+      <div class="summary summary-section" id="summarySection">
+        <h4>Summary</h4>
+        <div>
+          <span>Total Hours Worked:</span>
+          <span id="totalHoursWorked">0.00 hours</span>
+        </div>
+        <div>
+          <span>Total OT Hours:</span>
+          <span id="totalOTHrs">0.00 hours</span>
+        </div>
+        <div>
+          <span>Total Regular Payment:</span>
+          <span id="totalRegularPayment">₹0.00</span>
+        </div>
+        <div>
+          <span>Total OT Payment:</span>
+          <span id="totalOTPayment">₹0.00</span>
+        </div>
+        <div>
+          <span>Total Payment:</span>
+          <span id="totalPayment">₹0.00</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons at Bottom -->
+      
+      
+            <!-- Action Buttons at Bottom -->
+      <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+        <button class="delete-all-btn" onclick="deleteAllData()">Delete All Data</button>
+        <button class="download-pdf-btn" onclick="downloadPDF()">Download PDF</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Inline JavaScript -->
+  <!-- Include jsPDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
+    // Initialize jsPDF
+    const { jsPDF } = window.jspdf;
+
     document.addEventListener("DOMContentLoaded", () => {
       const rateForm = document.getElementById("rateForm");
       const dutyForm = document.getElementById("dutyForm");
@@ -209,8 +355,8 @@
       // Save rates to local storage
       rateForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        rates.regularRate = parseInt(document.getElementById("regularRate").value) || 500;
-        rates.otRate = parseInt(document.getElementById("otRate").value) || 700;
+        rates.regularRate = parseFloat(document.getElementById("regularRate").value) || 500;
+        rates.otRate = parseFloat(document.getElementById("otRate").value) || 700;
         localStorage.setItem("rates", JSON.stringify(rates));
         alert("Rates saved successfully!");
       });
@@ -224,21 +370,147 @@
       dutyForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const date = document.getElementById("date").value;
-        const shift = document.getElementById("shift").value;
-        const hours = parseInt(document.getElementById("hours").value);
-        const otHours = parseInt(document.getElementById("otHours").value) || 0;
+        const shift = document.getElementById("shift").value; // Updated shift values
+        const hours = parseFloat(document.getElementById("hours").value) || 0;
+        const otHours = parseFloat(document.getElementById("otHours").value) || 0;
 
-        if (hours > 0 || otHours > 0 || shift === "Shutty") {
+        if (shift === "Off Day" || (hours > 0 || otHours > 0)) {
           duties.push({ date, shift, hours, otHours });
           saveDutiesToLocalStorage();
           dutyForm.reset();
           alert("Duty added successfully!");
+          renderMonthlyData();
         } else {
-          alert("Please enter valid hours.");
+          alert("Please enter valid hours or select 'Off Day'.");
         }
       });
+
+      // Render monthly data in the table
+      function renderMonthlyData() {
+        const tableBody = document.querySelector("#monthlyDataTable tbody");
+        tableBody.innerHTML = "";
+
+        let totalRegularPayment = 0;
+        let totalOTPayment = 0;
+        let totalHoursWorked = 0;
+        let totalOTHrs = 0;
+
+        duties.forEach((duty) => {
+          const regularPayment = duty.hours * rates.regularRate;
+          const otPayment = duty.otHours * rates.otRate;
+
+          totalRegularPayment += regularPayment;
+          totalOTPayment += otPayment;
+          totalHoursWorked += duty.hours;
+          totalOTHrs += duty.otHours;
+
+          const row = document.createElement("tr");
+          if (duty.shift === "Off Day") {
+            row.classList.add("shutty-row"); // Add class for Off Day rows
+          }
+
+          row.innerHTML = `
+            <td>${duty.date}</td>
+            <td>${duty.shift}</td>
+            <td>${duty.hours.toFixed(2)}</td>
+            <td>${duty.otHours.toFixed(2)}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+
+        document.getElementById("totalHoursWorked").textContent = `${totalHoursWorked.toFixed(2)} hours`;
+        document.getElementById("totalOTHrs").textContent = `${totalOTHrs.toFixed(2)} hours`;
+        document.getElementById("totalRegularPayment").textContent = `₹${totalRegularPayment.toFixed(2)}`;
+        document.getElementById("totalOTPayment").textContent = `₹${totalOTPayment.toFixed(2)}`;
+        document.getElementById("totalPayment").textContent = `₹${(totalRegularPayment + totalOTPayment).toFixed(2)}`;
+      }
+
+      renderMonthlyData();
+
+      // Toggle Summary Visibility
+      window.toggleSummary = function () {
+        const summarySection = document.getElementById("summarySection");
+        const showSummaryBtn = document.querySelector(".show-summary-btn");
+
+        if (summarySection.style.display === "none" || summarySection.style.display === "") {
+          summarySection.style.display = "block";
+          showSummaryBtn.textContent = "Hide Summary";
+        } else {
+          summarySection.style.display = "none";
+          showSummaryBtn.textContent = "Show Summary";
+        }
+      };
+
+      // Delete All Data Functionality
+      window.deleteAllData = function () {
+        if (confirm("Are you sure you want to delete all data? This action cannot be undone.")) {
+          localStorage.removeItem("duties");
+          localStorage.removeItem("rates");
+          duties = [];
+          rates = { regularRate: 500, otRate: 700 };
+          document.getElementById("regularRate").value = rates.regularRate;
+          document.getElementById("otRate").value = rates.otRate;
+          renderMonthlyData();
+          alert("All data has been deleted.");
+        }
+      };
+
+      // Download PDF Functionality
+      window.downloadPDF = function () {
+        const doc = new jsPDF();
+
+        doc.setFontSize(18);
+        doc.text("Duty Manager Report", 10, 10);
+
+        let startY = 20;
+        doc.setFontSize(12);
+        doc.text("Date", 10, startY);
+        doc.text("Shift", 40, startY);
+        doc.text("Hours Worked", 70, startY);
+        doc.text("OT Hours", 100, startY);
+
+        duties.forEach((duty) => {
+          startY += 10;
+          doc.text(duty.date, 10, startY);
+          doc.text(duty.shift, 40, startY);
+          doc.text(duty.hours.toFixed(2), 70, startY);
+          doc.text(duty.otHours.toFixed(2), 100, startY);
+        });
+
+        startY += 20;
+        doc.setFontSize(14);
+        doc.text("Summary", 10, startY);
+        startY += 10;
+        doc.setFontSize(12);
+        doc.text(`Total Hours Worked: ${document.getElementById("totalHoursWorked").textContent}`, 10, startY);
+        startY += 10;
+        doc.text(`Total OT Hours: ${document.getElementById("totalOTHrs").textContent}`, 10, startY);
+        startY += 10;
+        doc.text(`Total Regular Payment: ${document.getElementById("totalRegularPayment").textContent}`, 10, startY);
+        startY += 10;
+        doc.text(`Total OT Payment: ${document.getElementById("totalOTPayment").textContent}`, 10, startY);
+        startY += 10;
+        doc.text(`Total Payment: ${document.getElementById("totalPayment").textContent}`, 10, startY);
+
+        doc.save("DutyManagerReport.pdf");
+      };
+
+      // Switch Tabs Functionality
+      window.switchTab = function (tabId) {
+        const tabs = document.querySelectorAll(".tab-content");
+        tabs.forEach((tab) => tab.classList.remove("active"));
+        document.getElementById(tabId).classList.add("active");
+
+        const buttons = document.querySelectorAll(".tab-button");
+        buttons.forEach((button) => button.classList.remove("active"));
+        const activeButton = document.querySelector(`.tab-button[onclick="switchTab('${tabId}')"]`);
+        activeButton.classList.add("active");
+
+        if (tabId === "view-data") {
+          renderMonthlyData();
+        }
+      };
     });
   </script>
-	<script type='text/javascript' src='//pl25987362.effectiveratecpm.com/57/0b/44/570b445b34d7dda4fc78cffc1f0742c8.js'></script>
 </body>
 </html>
