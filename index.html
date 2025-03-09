@@ -7,11 +7,10 @@
   <style>
     /* Root Variables for Themes */
     :root {
-      --bg-color: #000000; /* Black Background */
-      --text-color: #ffffff; /* White Text */
-      --container-bg: rgba(255, 255, 255, 0.1); /* Semi-transparent container */
-      --button-bg: linear-gradient(135deg, #ff9966, #ff5e62); /* Gradient buttons */
-      --button-text: white; /* Button text color */
+      --bg-color: #000000;
+      --text-color: #ffffff;
+      --container-bg: rgba(255, 255, 255, 0.1);
+      --button-bg: linear-gradient(135deg, #ff9966, #ff5e62); /* Default Orange-Red */
     }
 
     * {
@@ -86,7 +85,7 @@
     }
     form button {
       background: var(--button-bg);
-      color: var(--button-text);
+      color: white;
       cursor: pointer;
       border: none;
       font-weight: bold;
@@ -112,7 +111,7 @@
     }
     .tab-button.active {
       background: var(--button-bg);
-      color: var(--button-text);
+      color: white;
     }
     .tab-content {
       display: none;
@@ -142,8 +141,8 @@
       color: var(--text-color);
     }
     .shutty-row {
-      background-color: #ff4d4d !important; /* Red background for Off Day rows */
-      color: white !important; /* White text for better visibility */
+      background-color: #ff4d4d !important;
+      color: white !important;
     }
     .summary {
       margin-top: 20px;
@@ -161,39 +160,33 @@
       font-size: 1rem;
       font-weight: bold;
     }
-    .delete-all-btn, .download-pdf-btn {
-      display: inline-block;
-      margin: 20px 10px;
+
+    /* Custom Button Colors */
+    .delete-all-btn {
+      background: linear-gradient(135deg, #ff5e62, #ff0000) !important;
+    }
+    .download-pdf-btn {
+      background: linear-gradient(135deg, #39e600, #1f8c00) !important;
+    }
+    .summary-btn {
+      background: linear-gradient(135deg, #6a11cb, #2575fc) !important; /* Light Blue */
+    }
+
+    /* Common Button Styling */
+    .uniform-btn {
       padding: 10px 20px;
-      background: var(--button-bg-red);
-      color: var(--button-text);
       border: none;
       border-radius: 8px;
+      color: white;
       cursor: pointer;
       font-weight: bold;
-      transition: all 0.3s ease;
+      animation: pulse 1.5s infinite;
+      transition: transform 0.3s ease;
     }
-    .delete-all-btn:hover, .download-pdf-btn:hover {
+    .uniform-btn:hover {
       transform: scale(1.05);
     }
-    .show-summary-btn {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      background: var(--button-bg);
-      color: var(--button-text);
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-    .show-summary-btn:hover {
-      transform: scale(1.05);
-    }
-    .summary-section {
-      display: none;
-    }
+
     @media (max-width: 600px) {
       body {
         padding: 5px;
@@ -208,12 +201,8 @@
 
     /* Animations */
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     @keyframes slideIn {
       from {
@@ -226,12 +215,8 @@
       }
     }
     @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
   </style>
 </head>
@@ -245,7 +230,7 @@
     <!-- Tab Buttons -->
     <div class="tab-buttons">
       <button class="tab-button active" onclick="switchTab('add-duty')">Add Duty</button>
-      <button class="tab-button" onclick="switchTab('view-data')">View Monthly Data</button>
+      <button class="tab-button" onclick="switchTab('view-data')" id="viewDataTab">View Monthly Data</button>
     </div>
 
     <!-- Add Duty Tab -->
@@ -257,7 +242,7 @@
         <input type="number" step="any" id="regularRate" placeholder="e.g., 50.23" required>
         <label for="otRate">OT Rate (₹/hour):</label>
         <input type="number" step="any" id="otRate" placeholder="e.g., 75.50" required>
-        <button type="submit">Save Rates</button>
+        <button type="submit" class="uniform-btn">Save Rates</button>
       </form>
 
       <!-- Form to Add Duty -->
@@ -276,7 +261,7 @@
         <input type="number" step="any" id="hours" placeholder="e.g., 8.5">
         <label for="otHours">OT Hours (Optional):</label>
         <input type="number" step="any" id="otHours" placeholder="e.g., 2.25">
-        <button type="submit">Add Duty</button>
+        <button type="submit" class="uniform-btn">Add Duty</button>
       </form>
     </div>
 
@@ -297,11 +282,11 @@
         </tbody>
       </table>
 
-      <!-- Show Summary Button -->
-      <button class="show-summary-btn" onclick="toggleSummary()">Show Summary</button>
+      <!-- Show Summary Button (Blue) -->
+      <button class="uniform-btn summary-btn" onclick="toggleSummary()" style="margin: 20px auto;">Show Summary</button>
 
       <!-- Summary Section -->
-      <div class="summary summary-section" id="summarySection">
+      <div class="summary summary-section" id="summarySection" style="display: none;">
         <h4>Summary</h4>
         <div>
           <span>Total Hours Worked:</span>
@@ -326,12 +311,9 @@
       </div>
 
       <!-- Action Buttons at Bottom -->
-      
-      
-            <!-- Action Buttons at Bottom -->
       <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-        <button class="delete-all-btn" onclick="deleteAllData()">Delete All Data</button>
-        <button class="download-pdf-btn" onclick="downloadPDF()">Download PDF</button>
+        <button class="uniform-btn delete-all-btn" onclick="deleteAllData()">Delete All Data</button>
+        <button class="uniform-btn download-pdf-btn" onclick="downloadPDF()">Download PDF</button>
       </div>
     </div>
   </div>
@@ -347,6 +329,10 @@
       const dutyForm = document.getElementById("dutyForm");
       let duties = JSON.parse(localStorage.getItem("duties")) || [];
       let rates = JSON.parse(localStorage.getItem("rates")) || { regularRate: 500, otRate: 700 };
+      const viewDataTab = document.getElementById("viewDataTab");
+
+      // Check if duties exist to enable View Data tab
+      viewDataTab.disabled = duties.length === 0;
 
       // Display saved rates
       document.getElementById("regularRate").value = rates.regularRate;
@@ -370,15 +356,17 @@
       dutyForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const date = document.getElementById("date").value;
-        const shift = document.getElementById("shift").value; // Updated shift values
+        const shift = document.getElementById("shift").value;
         const hours = parseFloat(document.getElementById("hours").value) || 0;
         const otHours = parseFloat(document.getElementById("otHours").value) || 0;
 
-        if (shift === "Off Day" || (hours > 0 || otHours > 0)) {
+        if (shift === "Off Day" || hours > 0 || otHours > 0) {
           duties.push({ date, shift, hours, otHours });
           saveDutiesToLocalStorage();
           dutyForm.reset();
           alert("Duty added successfully!");
+          viewDataTab.disabled = false;
+          switchTab("view-data");
           renderMonthlyData();
         } else {
           alert("Please enter valid hours or select 'Off Day'.");
@@ -405,9 +393,7 @@
           totalOTHrs += duty.otHours;
 
           const row = document.createElement("tr");
-          if (duty.shift === "Off Day") {
-            row.classList.add("shutty-row"); // Add class for Off Day rows
-          }
+          if (duty.shift === "Off Day") row.classList.add("shutty-row");
 
           row.innerHTML = `
             <td>${duty.date}</td>
@@ -425,12 +411,13 @@
         document.getElementById("totalPayment").textContent = `₹${(totalRegularPayment + totalOTPayment).toFixed(2)}`;
       }
 
+      // Initial render
       renderMonthlyData();
 
       // Toggle Summary Visibility
       window.toggleSummary = function () {
         const summarySection = document.getElementById("summarySection");
-        const showSummaryBtn = document.querySelector(".show-summary-btn");
+        const showSummaryBtn = document.querySelector(".summary-btn");
 
         if (summarySection.style.display === "none" || summarySection.style.display === "") {
           summarySection.style.display = "block";
@@ -443,15 +430,16 @@
 
       // Delete All Data Functionality
       window.deleteAllData = function () {
-        if (confirm("Are you sure you want to delete all data? This action cannot be undone.")) {
+        if (confirm("Are you sure you want to delete all data?")) {
           localStorage.removeItem("duties");
           localStorage.removeItem("rates");
           duties = [];
           rates = { regularRate: 500, otRate: 700 };
-          document.getElementById("regularRate").value = rates.regularRate;
-          document.getElementById("otRate").value = rates.otRate;
+          document.getElementById("regularRate").value = 500;
+          document.getElementById("otRate").value = 700;
+          viewDataTab.disabled = true;
           renderMonthlyData();
-          alert("All data has been deleted.");
+          alert("All data deleted!");
         }
       };
 
@@ -482,13 +470,13 @@
         doc.text("Summary", 10, startY);
         startY += 10;
         doc.setFontSize(12);
-        doc.text(`Total Hours Worked: ${document.getElementById("totalHoursWorked").textContent}`, 10, startY);
+        doc.text(`Total Hours: ${document.getElementById("totalHoursWorked").textContent}`, 10, startY);
         startY += 10;
         doc.text(`Total OT Hours: ${document.getElementById("totalOTHrs").textContent}`, 10, startY);
         startY += 10;
-        doc.text(`Total Regular Payment: ${document.getElementById("totalRegularPayment").textContent}`, 10, startY);
+        doc.text(`Total Regular Pay: ${document.getElementById("totalRegularPayment").textContent}`, 10, startY);
         startY += 10;
-        doc.text(`Total OT Payment: ${document.getElementById("totalOTPayment").textContent}`, 10, startY);
+        doc.text(`Total OT Pay: ${document.getElementById("totalOTPayment").textContent}`, 10, startY);
         startY += 10;
         doc.text(`Total Payment: ${document.getElementById("totalPayment").textContent}`, 10, startY);
 
@@ -497,18 +485,20 @@
 
       // Switch Tabs Functionality
       window.switchTab = function (tabId) {
-        const tabs = document.querySelectorAll(".tab-content");
-        tabs.forEach((tab) => tab.classList.remove("active"));
+        if (tabId === "view-data" && duties.length === 0) {
+          alert("No data available!");
+          return;
+        }
+
+        document.querySelectorAll(".tab-content").forEach(tab => {
+          tab.classList.remove("active");
+        });
         document.getElementById(tabId).classList.add("active");
 
-        const buttons = document.querySelectorAll(".tab-button");
-        buttons.forEach((button) => button.classList.remove("active"));
-        const activeButton = document.querySelector(`.tab-button[onclick="switchTab('${tabId}')"]`);
-        activeButton.classList.add("active");
-
-        if (tabId === "view-data") {
-          renderMonthlyData();
-        }
+        document.querySelectorAll(".tab-button").forEach(button => {
+          button.classList.remove("active");
+        });
+        document.querySelector(`.tab-button[onclick="switchTab('${tabId}')"]`).classList.add("active");
       };
     });
   </script>
